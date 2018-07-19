@@ -25,9 +25,53 @@ app.post('/send', (req, res) => {
     var itemsProcessed = 0;
 
     input.forEach((element) => {
-        hash = sendToken(element.Address, element.Amount, count);
-        count++;  
-    });
+        var abiArray = JSON.parse(fs.readFileSync('abi.json', 'utf-8'));
+        var contractAddress = "0x14466590b32b83BE64898fD8b70E1a050DA0a9D0";
+        var contract = web3.eth.contract(abiArray).at(contractAddress);
+
+        var toAddress = element.toAddress;
+        var amount = element.amount;
+
+        var rawTransaction = {
+            "from": "myAddress",
+            "nonce": web3.toHex(count),
+            "gasPrice": web3.toHex(10),
+            "gasLimit": web3.toHex(500000),
+            "to": contractAddress,
+            "value": web3.toHex(0),
+            "data": contract.transfer.getData(toAddress, amount, {from: "myAddress"}),
+            "chainId": 0x03
+        };
+
+        var privKey = new Buffer(myPrivateKey, 'hex');
+        var tx = new Tx(rawTransaction);
+
+        tx.sign(privKey);
+        var serializedTx = tx.serialize();
+
+        web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function(err, hash) {
+            if (!err){
+                console.log(hash);
+
+                let transactionRecord = {
+                    Address: toAddress,
+                    Amount: amount,
+                    TxHash: hash
+                }
+                transactionRecords.push(transactionRecord);
+                console.log("# of transactions: " + transactionRecords.length);
+           // console.log(transactionRecords);
+           }
+           else{
+            console.error(err);
+            }
+        });
+
+
+    count++;
+
+
+
 // create a csv record
 // fs.writeFile("./output.csv", stringigy(transactionRecords), (err)=>{
 //     if(err) return console.log(err);
@@ -36,47 +80,53 @@ app.post('/send', (req, res) => {
 
 });
 
-function sendToken(toAddress, amount, count) {
+console.log(transactionRecords);
 
-    var abiArray = JSON.parse(fs.readFileSync('abi.json', 'utf-8'));
-    var contractAddress = "0x14466590b32b83BE64898fD8b70E1a050DA0a9D0";
-    var contract = web3.eth.contract(abiArray).at(contractAddress);
+})
 
-    var rawTransaction = {
-        "from": "myAddress",
-        "nonce": web3.toHex(count),
-        "gasPrice": web3.toHex(10),
-        "gasLimit": web3.toHex(500000),
-        "to": contractAddress,
-        "value": web3.toHex(0),
-        "data": contract.transfer.getData(toAddress, amount, {from: "myAddress"}),
-        "chainId": 0x03
-    };
+//     async function sendToken(toAddress, amount, count) {
 
-    var privKey = new Buffer(myPrivateKey, 'hex');
-    var tx = new Tx(rawTransaction);
+//         var abiArray = JSON.parse(fs.readFileSync('abi.json', 'utf-8'));
+//         var contractAddress = "0x14466590b32b83BE64898fD8b70E1a050DA0a9D0";
+//         var contract = web3.eth.contract(abiArray).at(contractAddress);
 
-    tx.sign(privKey);
-    var serializedTx = tx.serialize();
+//         console.log("Count: " + count);
 
-    web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function(err, hash) {
-        if (!err){
-            console.log(hash);
+//         var rawTransaction = {
+//             "from": "myAddress",
+//             "nonce": web3.toHex(count),
+//             "gasPrice": web3.toHex(count),
+//             "gasLimit": web3.toHex(500000),
+//             "to": contractAddress,
+//             "value": web3.toHex(0),
+//             "data": contract.transfer.getData(toAddress, amount, {from: "myAddress"}),
+//             "chainId": 0x03
+//         };
 
-            let transactionRecord = {
-                Address: toAddress,
-                Amount: amount,
-                TxHash: hash
-            }
-            transactionRecords.push(transactionRecord);
-        }
-        else{
-            console.log(err);
-        }
+//         var privKey = new Buffer(myPrivateKey, 'hex');
+//         var tx = new Tx(rawTransaction);
 
-    });
+//         tx.sign(privKey);
+//         var serializedTx = tx.serialize();
 
-};
+//         web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), function(err, hash) {
+//             if (!err){
+//                 console.log(hash);
+
+//                 let transactionRecord = {
+//                     Address: toAddress,
+//                     Amount: amount,
+//                     TxHash: hash
+//                 }
+//                 transactionRecords.push(transactionRecord);
+//                 console.log("# of transactions: " + transactionRecords.length);
+//                 return hash;
+//            // console.log(transactionRecords);
+//        }
+//        else{
+//         console.log(err);
+//     }
+// });
 
 var port = 8080;
 app.listen(port, () => console.log("Listening on port " + port));
