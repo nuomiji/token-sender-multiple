@@ -15,7 +15,7 @@ const csvWriter = createCsvWriter({
 
 const Tx = require('ethereumjs-tx');
 const Web3 = require('web3');
-var web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/vCfQu4uCspVZEATQTcmJ'));
+var web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/5221ed0407fa4b4ebfd42ed4fb844384'));
 
 var abiArray = JSON.parse(fs.readFileSync('./src/abi.json', 'utf-8'));
 var contract = web3.eth.contract(abiArray).at(config.contractAddress);
@@ -37,14 +37,14 @@ function readCSV (fileName) {
 
 function buildRawTransaction(nonce, gasPrice, gasLimit, toAddress, amount){
   return {
-    "from": "myAddress",
+    // "from": "myAddress",
     "nonce": web3.toHex(nonce),
     "gasPrice": web3.toHex(gasPrice),
     "gasLimit": web3.toHex(gasLimit),
     "to": config.contractAddress,
     "value": web3.toHex(0),
     "data": contract.transfer.getData(toAddress, amount, {from: "myAddress"}),
-    "chainId": 0x03
+    "chainId": 0x01
   }
 }
 
@@ -61,6 +61,7 @@ function sendToken(serializedTx, toAddress, amount, name) {
       }
 
       transactionRecords.push(transactionRecord);
+      console.log(hash);
       arrayCounter++;
     }
     else{
@@ -97,7 +98,7 @@ async function writeToCSV(){
   while(arrayCounter !== input.length){
     await delay(500);
   }
-  
+
   buildCSV();
 }
 
