@@ -15,7 +15,7 @@ const csvWriter = createCsvWriter({
 
 const Tx = require('ethereumjs-tx');
 const Web3 = require('web3');
-var web3 = new Web3(new Web3.providers.HttpProvider('https://mainnet.infura.io/v3/5221ed0407fa4b4ebfd42ed4fb844384'));
+var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 var abiArray = JSON.parse(fs.readFileSync('./src/abi.json', 'utf-8'));
 var contract = web3.eth.contract(abiArray).at(config.contractAddress);
@@ -28,8 +28,9 @@ var transactionRecords = [];
 var arrayCounter = 0;
 
 
-sendTokens(input);
-writeToCSV();
+console.log(web3.isConnected());
+// sendTokens(input);
+// writeToCSV();
 
 function readCSV (fileName) {
   return parse(fs.readFileSync(fileName, 'utf-8'), {columns: true});
