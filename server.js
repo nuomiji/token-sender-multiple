@@ -51,9 +51,7 @@ function buildRawTransaction(nonce, gasPrice, gasLimit, toAddress, amount) {
 		"gasLimit": web3.toHex(gasLimit),
 		"to": config.contractAddress,
 		"value": web3.toHex(0),
-		"data": contract.transfer.getData(toAddress, amount, {
-			from: "myAddress"
-		}),
+		"data": contract.transfer.getData(toAddress, amount, {from: config.myAddress}),
 		"chainId": 999
 	}
 }
@@ -73,9 +71,6 @@ function sendToken(serializedTx, toAddress, amount, name) {
 			transactionRecords.push(transactionRecord);
 			console.log(hash);
 			arrayCounter++;
-			var receipt = web3.eth.getTransactionReceipt(hash);
-			console.log("Receipt:" + receipt);
-
 
 		} else {
 			console.error(err);
