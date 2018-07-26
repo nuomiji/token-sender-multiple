@@ -30,7 +30,7 @@ var input = readCSV(config.inputFileName);
 var transactionRecords = [];
 var arrayCounter = 0;
 
-
+// console.log(web3.isConnected());
 
 sendTokens(input);
 writeToCSV();
@@ -44,15 +44,13 @@ function readCSV(fileName) {
 function buildRawTransaction(nonce, gasPrice, gasLimit, toAddress, amount) {
 	console.log("Nonce: " + nonce);
 	return {
-		// "from": "myAddress",
-		// "nonce": web3.toHex(nonce),
 		"nonce": nonce,
 		"gasPrice": web3.toHex(gasPrice),
 		"gasLimit": web3.toHex(gasLimit),
 		"to": config.contractAddress,
 		"value": web3.toHex(0),
 		"data": contract.transfer.getData(toAddress, amount, {from: config.myAddress}),
-		"chainId": 999
+		"chainId": 777
 	}
 }
 
