@@ -1,10 +1,13 @@
 var config = {
-	myAddress: "0xfd938f76accb3549ed68a309c0fb8965828bbbfb",
-	myPrivateKey: "52f746b6e79a62ddce67485fe16f2f372e8bc7c450a498e7ad05fe27b3f25b69",
-	contractAddress: "0x0eF8da5F26f9f0dC1999B2837094a79cb0BF7404",
+	myAddress: "0xA0bEc14CCf8Cb61db70557b07F2703C7c8ce4C69",
+	myPrivateKey: "eb9c47dbe32787bb641048df11ea0ed5ca93f1d40b0343a4be0da7c2713358a6",
+	contractAddress: "0x14466590b32b83be64898fd8b70e1a050da0a9d0",
 	inputFileName: "./src/Destinations.csv",
 	gasPrice: 10,
 	gasLimit: 500000,
 }
+
+
+// gasPrice is in Gwei
 
 module.exports = config;

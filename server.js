@@ -13,11 +13,9 @@ const csvWriter = createCsvWriter({
 	]
 });
 
-
-
 const Tx = require('ethereumjs-tx');
 const Web3 = require('web3');
-var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+var web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/vCfQu4uCspVZEATQTcmJ'));
 
 var abiArray = JSON.parse(fs.readFileSync('./src/abi.json', 'utf-8'));
 var contract = web3.eth.contract(abiArray).at(config.contractAddress);
@@ -45,12 +43,12 @@ function buildRawTransaction(nonce, gasPrice, gasLimit, toAddress, amount) {
 	console.log("Nonce: " + nonce);
 	return {
 		"nonce": nonce,
-		"gasPrice": web3.toHex(gasPrice),
+		"gasPrice": web3.toHex(web3.toWei(gasPrice, "shannon")),
 		"gasLimit": web3.toHex(gasLimit),
 		"to": config.contractAddress,
 		"value": web3.toHex(0),
 		"data": contract.transfer.getData(toAddress, amount, {from: config.myAddress}),
-		"chainId": 777
+		"chainId": 0x03
 	}
 }
 

@@ -7,3 +7,15 @@ my address:
 
 private key:
 eb9c47dbe32787bb641048df11ea0ed5ca93f1d40b0343a4be0da7c2713358a6
+
+contract address:
+0x14466590b32b83be64898fd8b70e1a050da0a9d0
+
+Infura api key:
+https://ropsten.infura.io/vCfQu4uCspVZEATQTcmJ
+
+gas used:
+36838
+
+***to run***
+geth --datadir ./777data  --networkid 777 --rpc --rpcaddr "localhost" --rpcport "8545" --rpcapi "web3,eth" --rpccorsdomain "http://localhost:8545" console
